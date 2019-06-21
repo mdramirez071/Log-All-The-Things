@@ -20,8 +20,9 @@ app.use((req, res, next) => {
 //logger.info(console.log);
 //Grabs the User Agent
 var userGetData = req.get("User-agent");
-dataArray.push(userGetData);
-logger.log(userGetData);
+var newUserData = '"' + userGetData + '"';
+dataArray.push(newUserData);
+//logger.log(newUserData);
 
 //Grabs the Date/Time
 var DateTime = new Date();
@@ -41,7 +42,7 @@ logger.log(Resource);
 //Grabs the HTTP Version
 
 var httpVer = req.httpVersion;
-dataArray.push(httpVer);
+dataArray.push("HTTP/" + httpVer);
 logger.log(httpVer);
 
 //Grabs the Status Code
@@ -53,28 +54,40 @@ logger.log(status);
 logger.log(dataArray);
 
 let newArrayofStr = dataArray.join(',');
-let newArray = "\n" + newArrayofStr
-fs.appendFile("log.csv", newArray, (err) => {
+let breakLineOnArr = newArrayofStr + "\n";
+
+console.log(newArrayofStr);
+
+fs.appendFile("log.csv", breakLineOnArr, (err) => {
     if (err) throw err;
     console.log('The data has been appended to the log CSV file!');
   });
+function emptyTheArray(){
+  dataArray.length = 0;
+}
+emptyTheArray();
+
  next();
 });
 
 
 app.get('/', (req, res) => {
 // write your code to respond "ok" here
-// const count = 5;
-// logger.log(count);
 res.status(200).send("ok");
 
 });
 
 app.get('/logs', (req, res) => {
 // write your code to return a json object containing the log data here
-// const count = 4;
-// logger.log(count);
-res.status(200).send('logsss for daysss');
+const csvFilePath='/Users/admin/projects/node101-log-all-the-things/log.csv'
+const csv=require('csvtojson')
+csv()
+.fromFile(csvFilePath)
+.then((jsonObj)=>{
+    console.log(jsonObj);
+    logger.log(jsonObj);
+res.status(200).send(jsonObj);
+})
 });
 
 module.exports = app;

@@ -15,9 +15,6 @@ const dataArray = [];
 
 app.use((req, res, next) => {
 // write your logging code here
-//res.status(200).send("ok");
-// fs.send(log.csv)
-//logger.info(console.log);
 //Grabs the User Agent
 var userGetData = req.get("User-agent");
 var newUserData = '"' + userGetData + '"';

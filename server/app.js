@@ -2,11 +2,11 @@ const express = require('express');
 //const http = require('http');
 const fs = require('fs');
 const app = express();
-const { Console } = require('console');
-const output = fs.createWriteStream('./stdout.log');
-const errorOutput = fs.createWriteStream('./stderr.log');
-// Custom simple logger
-const logger = new Console({ stdout: output, stderr: errorOutput });
+// const { Console } = require('console');
+// const output = fs.createWriteStream('./stdout.log');
+// const errorOutput = fs.createWriteStream('./stderr.log');
+// // Custom simple logger
+// const logger = new Console({ stdout: output, stderr: errorOutput });
 // use it like console
 
 const dataArray = [];
@@ -25,37 +25,37 @@ dataArray.push(newUserData);
 var DateTime = new Date();
 var formatTime = DateTime.toISOString();
 dataArray.push(formatTime);
-logger.log(formatTime);
+//logger.log(formatTime);
 
 //Grabs the Method (GET, POST, DELETE, etc.)
 var Method = req.method;
 dataArray.push(Method);
-logger.log(Method);
+//logger.log(Method);
 
 //Grabs the Resource
 var Resource = req.url;
 dataArray.push(Resource);
-logger.log(Resource);
+//logger.log(Resource);
 //Grabs the HTTP Version
 
 var httpVer = req.httpVersion;
 dataArray.push("HTTP/" + httpVer);
-logger.log(httpVer);
+//logger.log(httpVer);
 
 //Grabs the Status Code
 var status = res.statusCode;
 dataArray.push(status);
-logger.log(status);
+//logger.log(status);
 
 //logs the full array of initialData
-logger.log(dataArray);
+//logger.log(dataArray);
 
 let newArrayofStr = dataArray.join(',');
 let breakLineOnArr = newArrayofStr + "\n";
 
 console.log(newArrayofStr);
 
-fs.appendFile("log.csv", breakLineOnArr, (err) => {
+fs.appendFile("/tmp/log.csv", breakLineOnArr, (err) => {
     if (err) throw err;
     console.log('The data has been appended to the log CSV file!');
   });
@@ -76,13 +76,13 @@ res.status(200).send("ok");
 
 app.get('/logs', (req, res) => {
 // write your code to return a json object containing the log data here
-const csvFilePath='/Users/admin/projects/node101-log-all-the-things/log.csv'
+const csvFilePath='/Users/admin/projects/node101-log-all-the-things/tmp/log.csv'
 const csv=require('csvtojson')
 csv()
 .fromFile(csvFilePath)
 .then((jsonObj)=>{
     console.log(jsonObj);
-    logger.log(jsonObj);
+    //logger.log(jsonObj);
 res.status(200).send(jsonObj);
 })
 });
